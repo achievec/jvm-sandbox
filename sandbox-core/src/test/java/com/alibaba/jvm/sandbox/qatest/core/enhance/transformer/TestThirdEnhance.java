@@ -1,28 +1,21 @@
 package com.alibaba.jvm.sandbox.qatest.core.enhance.transformer;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
-
 import com.alibaba.jvm.sandbox.core.enhance.weaver.asm.AsmMethods;
 import com.alibaba.jvm.sandbox.core.enhance.weaver.asm.AsmTypes;
 import com.alibaba.jvm.sandbox.core.util.AsmUtils;
-
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Label;
-import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 import org.objectweb.asm.commons.Method;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
 
 import static com.alibaba.jvm.sandbox.core.util.SandboxStringUtils.toJavaClassName;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 import static org.objectweb.asm.ClassWriter.COMPUTE_FRAMES;
 import static org.objectweb.asm.ClassWriter.COMPUTE_MAXS;
-import static org.objectweb.asm.Opcodes.ASM7;
+import static org.objectweb.asm.Opcodes.ASM9;
 
 /**
  * 测试第三方增强冲突情况
@@ -42,7 +35,7 @@ public class TestThirdEnhance{
         // 返回增强后字节码
         final ClassReader cr = new ClassReader(classfileBuffer);
         final ClassWriter cw = createClassWriter(loader, cr);
-        cr.accept(new ThirdClassVisitor(ASM7,cw,signCodes,cr.getClassName()),
+        cr.accept(new ThirdClassVisitor(ASM9,cw,signCodes,cr.getClassName()),
             EXPAND_FRAMES
         );
         return dumpClassIfNecessary(cr.getClassName(), cw.toByteArray());
